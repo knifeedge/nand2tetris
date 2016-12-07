@@ -10,5 +10,60 @@
 // When no key is pressed, the program clears the screen, i.e. writes
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
+ 
+  // Load numcols to 8191 (32*256)-1 = 8191
+	@8191
+	D=A
+	@numcols
+	M=D
 
-// Put your code here.
+	(LOOP)
+    // set i=0
+    @i
+	  M=0
+	
+    // Save screen address
+	  @SCREEN
+	  D=A
+	  @address
+	  M=D
+
+	  @KBD
+	  D=M
+    @WHITE
+	  D;JEQ
+	  @BLACK
+	  0;JMP
+	
+  (WHITE)
+    @color
+	  M=0
+	  @DRAW
+	  0;JMP
+		
+	(BLACK)
+    @color
+    M=-1
+    @DRAW
+    0;JMP
+
+  (DRAW)
+	  @i
+		D=M
+		@numcols
+		D=D-M
+		@LOOP
+		D;JGT
+	  @color
+	  D=M
+		@address
+		A=M
+		M=D
+    @i
+		M=M+1
+		@1
+		D=A
+		@address
+		M=D+M
+    @DRAW
+	  0;JMP
